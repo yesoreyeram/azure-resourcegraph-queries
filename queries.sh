@@ -33,6 +33,9 @@ az graph query -q 'summarize count() by location | top 5 by count_ asc'
 # Count of specific resource type across subscriptions
 az graph query -q 'where type == "microsoft.storage/storageaccounts" | count' 
 
+# Total number resource groups by subscription name
+az graph query -q `ResourceContainers  | where type=="microsoft.resources/subscriptions"  | project SubscriptionName = name, subscriptionId | join ( 		ResourceContainers  		| where type=="microsoft.resources/subscriptions/resourcegroups"  		| summarize number_of_resosurces = count() by subscriptionId 	) on subscriptionId  | project-away subscriptionId1 | order by number_of_resosurces desc`
+
 ##################
 # Storage Accounts
 ##################
